@@ -6,8 +6,7 @@ import {
   Shield, 
   Trophy, 
   MapPin,
-  Vibrate,
-  Siren
+  Vibrate
 } from 'lucide-react';
 import { Header } from '@/components/Header';
 import { EmergencyButton } from '@/components/EmergencyButton';
@@ -68,35 +67,22 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen gradient-emergency-bg">
       <Header />
       
-      <main className="container mx-auto px-4 py-8">
-        {/* Hero Section */}
-        <div className="text-center mb-10 animate-fade-in">
-          <div className="inline-flex items-center justify-center p-4 rounded-full bg-primary/10 mb-4">
-            <Siren className="w-12 h-12 text-primary" />
-          </div>
-          <h1 className="text-3xl md:text-4xl font-black text-foreground mb-3">
-            Unified Emergency System
-          </h1>
-          <p className="text-muted-foreground max-w-md mx-auto">
-            Quick access to emergency services. Report accidents, call for help, and earn rewards for community safety.
-          </p>
-        </div>
-
+      <main className="container mx-auto px-4 py-6 max-w-lg">
         {/* Location Status */}
-        <div className="glass-effect rounded-2xl p-4 mb-8 flex items-center justify-between animate-fade-in" style={{ animationDelay: '0.1s' }}>
-          <div className="flex items-center gap-3">
-            <MapPin className={`w-5 h-5 ${latitude ? 'text-success' : 'text-muted-foreground'}`} />
+        <div className="glass-effect rounded-xl p-3 mb-6 flex items-center justify-between animate-fade-in">
+          <div className="flex items-center gap-2">
+            <MapPin className={`w-4 h-4 ${latitude ? 'text-success' : 'text-muted-foreground'}`} />
             <div>
-              <p className="text-sm font-medium text-foreground">
+              <p className="text-xs font-medium text-foreground">
                 {latitude && longitude 
                   ? 'Location Active' 
                   : 'Location Not Available'}
               </p>
               {latitude && longitude && (
-                <p className="text-xs text-muted-foreground">
+                <p className="text-[10px] text-muted-foreground">
                   {latitude.toFixed(4)}, {longitude.toFixed(4)}
                 </p>
               )}
@@ -107,14 +93,15 @@ const Index = () => {
             size="sm" 
             onClick={getLocation}
             disabled={locationLoading}
+            className="text-xs h-8"
           >
             {locationLoading ? 'Getting...' : 'Update'}
           </Button>
         </div>
 
         {/* Emergency Buttons Grid */}
-        <div className="grid grid-cols-2 gap-4 mb-8">
-          <div className="animate-fade-in" style={{ animationDelay: '0.2s' }}>
+        <div className="grid grid-cols-2 gap-3 mb-6">
+          <div className="animate-fade-in" style={{ animationDelay: '0.1s' }}>
             <EmergencyButton
               icon={AlertTriangle}
               label="Report"
@@ -124,7 +111,7 @@ const Index = () => {
             />
           </div>
           
-          <div className="animate-fade-in" style={{ animationDelay: '0.3s' }}>
+          <div className="animate-fade-in" style={{ animationDelay: '0.2s' }}>
             <EmergencyButton
               icon={Phone}
               label="Ambulance"
@@ -134,7 +121,7 @@ const Index = () => {
             />
           </div>
           
-          <div className="animate-fade-in" style={{ animationDelay: '0.4s' }}>
+          <div className="animate-fade-in" style={{ animationDelay: '0.3s' }}>
             <EmergencyButton
               icon={Shield}
               label="Police"
@@ -144,7 +131,7 @@ const Index = () => {
             />
           </div>
           
-          <div className="animate-fade-in" style={{ animationDelay: '0.5s' }}>
+          <div className="animate-fade-in" style={{ animationDelay: '0.4s' }}>
             <EmergencyButton
               icon={Trophy}
               label="Rewards"
@@ -156,16 +143,16 @@ const Index = () => {
         </div>
 
         {/* Shake Detection */}
-        <div className="glass-effect rounded-2xl p-6 animate-fade-in" style={{ animationDelay: '0.6s' }}>
-          <div className="flex items-center gap-4 mb-4">
-            <div className="p-3 rounded-xl bg-secondary/20">
-              <Vibrate className="w-6 h-6 text-secondary" />
+        <div className="glass-effect rounded-xl p-4 mb-6 animate-fade-in" style={{ animationDelay: '0.5s' }}>
+          <div className="flex items-center gap-3 mb-3">
+            <div className="p-2 rounded-lg bg-secondary/20">
+              <Vibrate className="w-5 h-5 text-secondary" />
             </div>
             <div>
-              <h3 className="font-bold text-foreground">Auto Accident Detection</h3>
-              <p className="text-sm text-muted-foreground">
+              <h3 className="font-bold text-foreground text-sm">Auto Accident Detection</h3>
+              <p className="text-xs text-muted-foreground">
                 {shakeSupported 
-                  ? 'Shake your device to trigger emergency alert'
+                  ? 'Shake device to trigger alert'
                   : 'Not supported on this device'}
               </p>
             </div>
@@ -175,7 +162,7 @@ const Index = () => {
             <Button
               variant={shakeEnabled ? 'success' : 'outline'}
               onClick={shakeEnabled ? undefined : handleEnableShake}
-              className="w-full"
+              className="w-full h-9 text-sm"
               disabled={shakeEnabled}
             >
               {shakeEnabled ? '✓ Detection Active' : 'Enable Shake Detection'}
@@ -184,18 +171,18 @@ const Index = () => {
         </div>
 
         {/* Quick Info */}
-        <div className="mt-8 grid grid-cols-3 gap-4 text-center animate-fade-in" style={{ animationDelay: '0.7s' }}>
-          <div className="glass-effect rounded-xl p-4">
-            <div className="text-2xl font-black text-primary">108</div>
-            <div className="text-xs text-muted-foreground">Ambulance</div>
+        <div className="grid grid-cols-3 gap-3 text-center animate-fade-in" style={{ animationDelay: '0.6s' }}>
+          <div className="glass-effect rounded-xl p-3">
+            <div className="text-xl font-black text-primary">108</div>
+            <div className="text-[10px] text-muted-foreground">Ambulance</div>
           </div>
-          <div className="glass-effect rounded-xl p-4">
-            <div className="text-2xl font-black text-accent">100</div>
-            <div className="text-xs text-muted-foreground">Police</div>
+          <div className="glass-effect rounded-xl p-3">
+            <div className="text-xl font-black text-accent">100</div>
+            <div className="text-[10px] text-muted-foreground">Police</div>
           </div>
-          <div className="glass-effect rounded-xl p-4">
-            <div className="text-2xl font-black text-secondary">101</div>
-            <div className="text-xs text-muted-foreground">Fire</div>
+          <div className="glass-effect rounded-xl p-3">
+            <div className="text-xl font-black text-secondary">101</div>
+            <div className="text-[10px] text-muted-foreground">Fire</div>
           </div>
         </div>
       </main>
