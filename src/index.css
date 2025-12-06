@@ -6,13 +6,13 @@
 
 @layer base {
   :root {
-    --background: 220 20% 10%;
+    --background: 220 25% 8%;
     --foreground: 0 0% 98%;
 
-    --card: 220 18% 14%;
+    --card: 220 20% 12%;
     --card-foreground: 0 0% 98%;
 
-    --popover: 220 18% 14%;
+    --popover: 220 20% 12%;
     --popover-foreground: 0 0% 98%;
 
     --primary: 0 84% 50%;
@@ -21,11 +21,11 @@
     --secondary: 25 95% 53%;
     --secondary-foreground: 0 0% 100%;
 
-    --muted: 220 15% 20%;
-    --muted-foreground: 220 10% 60%;
+    --muted: 220 15% 18%;
+    --muted-foreground: 220 10% 55%;
 
     --accent: 45 93% 58%;
-    --accent-foreground: 220 20% 10%;
+    --accent-foreground: 220 25% 8%;
 
     --success: 142 76% 36%;
     --success-foreground: 0 0% 100%;
@@ -33,23 +33,30 @@
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 220 15% 25%;
-    --input: 220 15% 25%;
+    --border: 220 15% 20%;
+    --input: 220 15% 20%;
     --ring: 0 84% 50%;
 
     --radius: 0.75rem;
 
-    --sidebar-background: 220 18% 12%;
+    --sidebar-background: 220 20% 10%;
     --sidebar-foreground: 0 0% 98%;
     --sidebar-primary: 0 84% 50%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 220 15% 20%;
+    --sidebar-accent: 220 15% 18%;
     --sidebar-accent-foreground: 0 0% 98%;
-    --sidebar-border: 220 15% 25%;
+    --sidebar-border: 220 15% 20%;
     --sidebar-ring: 0 84% 50%;
 
     --emergency-glow: 0 0 30px hsl(0 84% 50% / 0.4);
     --warning-glow: 0 0 30px hsl(25 95% 53% / 0.4);
+    
+    --gradient-emergency: linear-gradient(135deg, 
+      hsl(0 84% 15%) 0%, 
+      hsl(220 25% 8%) 25%, 
+      hsl(280 60% 12%) 50%, 
+      hsl(220 25% 8%) 75%, 
+      hsl(25 80% 15%) 100%);
   }
 
   .dark {
@@ -98,9 +105,14 @@
   }
   
   .glass-effect {
-    background: hsl(var(--card) / 0.8);
-    backdrop-filter: blur(12px);
-    border: 1px solid hsl(var(--border) / 0.5);
+    background: hsl(var(--card) / 0.85);
+    backdrop-filter: blur(16px);
+    border: 1px solid hsl(var(--border) / 0.4);
+  }
+  
+  .gradient-emergency-bg {
+    background: var(--gradient-emergency);
+    background-attachment: fixed;
   }
   
   .pulse-emergency {

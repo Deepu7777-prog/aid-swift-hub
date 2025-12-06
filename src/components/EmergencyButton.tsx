@@ -24,15 +24,16 @@ export function EmergencyButton({
       variant={variant}
       onClick={onClick}
       className={cn(
-        'flex flex-col items-center justify-center h-auto py-6 px-4 w-full aspect-square max-w-[160px]',
-        'rounded-2xl transition-all duration-300 hover:scale-105',
+        'flex flex-col items-center justify-center h-28 w-full',
+        'rounded-2xl transition-all duration-300 hover:scale-[1.02]',
+        'gap-1',
         className
       )}
     >
-      <Icon className="w-10 h-10 mb-2" />
-      <span className="text-base font-bold">{label}</span>
+      <Icon className="w-6 h-6" />
+      <span className="text-sm font-bold">{label}</span>
       {sublabel && (
-        <span className="text-xs opacity-80 mt-1">{sublabel}</span>
+        <span className="text-xs opacity-80">{sublabel}</span>
       )}
     </Button>
   );
