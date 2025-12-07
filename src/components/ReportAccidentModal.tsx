@@ -1,9 +1,10 @@
 import { useState, useRef } from 'react';
-import { X, Camera, MapPin, Send, Upload, Loader2 } from 'lucide-react';
+import { X, Camera, MapPin, Send, Upload, Loader2, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useGeolocation } from '@/hooks/useGeolocation';
 import { storage } from '@/lib/storage';
 import { toast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
 
 interface ReportAccidentModalProps {
   isOpen: boolean;
@@ -14,6 +15,8 @@ export function ReportAccidentModal({ isOpen, onClose }: ReportAccidentModalProp
   const [description, setDescription] = useState('');
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [aiSummary, setAiSummary] = useState<string | null>(null);
+  const [isLoadingAi, setIsLoadingAi] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { latitude, longitude, getLocation, loading: locationLoading, error: locationError } = useGeolocation();
 
@@ -39,6 +42,7 @@ export function ReportAccidentModal({ isOpen, onClose }: ReportAccidentModalProp
     }
 
     setIsSubmitting(true);
+    setIsLoadingAi(true);
 
     const user = storage.getUser();
     storage.addReport({
@@ -52,12 +56,52 @@ export function ReportAccidentModal({ isOpen, onClose }: ReportAccidentModalProp
       type: 'manual',
     });
 
-    toast({
-      title: 'Report Submitted',
-      description: 'Thank you! You earned 10 reward points.',
-    });
+    // Call AI for summary and next steps
+    try {
+      const userLocation = latitude && longitude 
+        ? `${latitude.toFixed(6)}, ${longitude.toFixed(6)}` 
+        : 'Location not provided';
+
+      const { data, error } = await supabase.functions.invoke('accident-ai', {
+        body: { 
+          accidentDetails: description,
+          userLocation 
+        }
+      });
+
+      if (error) {
+        console.error('AI function error:', error);
+        toast({
+          title: 'Report Submitted',
+          description: 'Thank you! You earned 10 reward points.',
+        });
+      } else if (data?.message) {
+        setAiSummary(data.message);
+        toast({
+          title: 'Report Submitted',
+          description: 'AI is analyzing your report...',
+        });
+        setIsSubmitting(false);
+        setIsLoadingAi(false);
+        return; // Don't close modal yet, show AI summary
+      }
+    } catch (err) {
+      console.error('Error calling AI:', err);
+      toast({
+        title: 'Report Submitted',
+        description: 'Thank you! You earned 10 reward points.',
+      });
+    }
 
     setIsSubmitting(false);
+    setIsLoadingAi(false);
+    setDescription('');
+    setPhotoPreview(null);
+    onClose();
+  };
+
+  const handleClose = () => {
+    setAiSummary(null);
     setDescription('');
     setPhotoPreview(null);
     onClose();
@@ -65,12 +109,44 @@ export function ReportAccidentModal({ isOpen, onClose }: ReportAccidentModalProp
 
   if (!isOpen) return null;
 
+  // Show AI Summary view
+  if (aiSummary) {
+    return (
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/90 backdrop-blur-sm animate-fade-in">
+        <div className="glass-effect rounded-3xl p-6 max-w-lg w-full max-h-[90vh] overflow-y-auto">
+          <div className="flex justify-between items-center mb-6">
+            <h2 className="text-2xl font-bold text-foreground flex items-center gap-2">
+              <Sparkles className="w-6 h-6 text-primary" />
+              AI Analysis
+            </h2>
+            <Button variant="ghost" size="icon" onClick={handleClose}>
+              <X className="w-5 h-5" />
+            </Button>
+          </div>
+
+          <div className="bg-primary/10 border border-primary/20 rounded-xl p-4 mb-6">
+            <p className="text-sm text-muted-foreground mb-2">Report Summary & Next Steps</p>
+            <div className="text-foreground whitespace-pre-wrap">{aiSummary}</div>
+          </div>
+
+          <div className="text-center text-sm text-success mb-4">
+            ✓ You earned 10 reward points for this report!
+          </div>
+
+          <Button variant="default" onClick={handleClose} className="w-full">
+            Done
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/90 backdrop-blur-sm animate-fade-in">
       <div className="glass-effect rounded-3xl p-6 max-w-lg w-full max-h-[90vh] overflow-y-auto">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl font-bold text-foreground">Report Accident</h2>
-          <Button variant="ghost" size="icon" onClick={onClose}>
+          <Button variant="ghost" size="icon" onClick={handleClose}>
             <X className="w-5 h-5" />
           </Button>
         </div>
@@ -163,15 +239,20 @@ export function ReportAccidentModal({ isOpen, onClose }: ReportAccidentModalProp
           variant="emergency"
           size="xl"
           onClick={handleSubmit}
-          disabled={isSubmitting}
+          disabled={isSubmitting || isLoadingAi}
           className="w-full"
         >
-          {isSubmitting ? (
-            <Loader2 className="w-5 h-5 animate-spin" />
+          {isSubmitting || isLoadingAi ? (
+            <>
+              <Loader2 className="w-5 h-5 animate-spin" />
+              {isLoadingAi ? 'Analyzing with AI...' : 'Submitting...'}
+            </>
           ) : (
-            <Send className="w-5 h-5" />
+            <>
+              <Send className="w-5 h-5" />
+              Submit Report
+            </>
           )}
-          Submit Report
         </Button>
       </div>
     </div>
