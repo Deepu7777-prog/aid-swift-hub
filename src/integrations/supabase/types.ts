@@ -14,13 +14,117 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      accident_reports: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          id: string
+          latitude: number | null
+          longitude: number | null
+          photo_url: string | null
+          status: string | null
+          type: string | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          latitude?: number | null
+          longitude?: number | null
+          photo_url?: string | null
+          status?: string | null
+          type?: string | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          latitude?: number | null
+          longitude?: number | null
+          photo_url?: string | null
+          status?: string | null
+          type?: string | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string | null
+          email: string
+          id: string
+          name: string
+          phone: string | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string | null
+          email: string
+          id?: string
+          name: string
+          phone?: string | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string | null
+          email?: string
+          id?: string
+          name?: string
+          phone?: string | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_stats: {
+        Row: {
+          created_at: string | null
+          id: string
+          rank: string | null
+          reward_points: number | null
+          total_reports: number | null
+          updated_at: string | null
+          user_id: string
+          verified_reports: number | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          rank?: string | null
+          reward_points?: number | null
+          total_reports?: number | null
+          updated_at?: string | null
+          user_id: string
+          verified_reports?: number | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          rank?: string | null
+          reward_points?: number | null
+          total_reports?: number | null
+          updated_at?: string | null
+          user_id?: string
+          verified_reports?: number | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      calculate_rank: { Args: { points: number }; Returns: string }
     }
     Enums: {
       [_ in never]: never
